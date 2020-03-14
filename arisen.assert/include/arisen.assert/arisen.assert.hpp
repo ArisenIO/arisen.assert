@@ -1,16 +1,16 @@
 #pragma once
 
-#include <eosio/crypto.hpp>
-#include <eosio/multi_index.hpp>
-#include <eosio/singleton.hpp>
+#include <arisen/crypto.hpp>
+#include <arisen/multi_index.hpp>
+#include <arisen/singleton.hpp>
 
 namespace assert_contract {
 
-using namespace eosio;
+using namespace arisen;
 using std::string;
 using std::vector;
 
-struct [[ eosio::contract("eosio.assert"), eosio::table("chain.params") ]] stored_chain_params {
+struct [[ arisen::contract("arisen.assert"), arisen::table("chain.params") ]] stored_chain_params {
    checksum256 chain_id;
    string      chain_name;
    checksum256 icon;
@@ -29,7 +29,7 @@ inline bool operator==(const contract_action& a, const contract_action& b) {
    return std::tie(a.contract, a.action) == std::tie(b.contract, b.action);
 }
 
-struct [[ eosio::contract("eosio.assert"), eosio::table("manifests") ]] stored_manifest {
+struct [[ arisen::contract("arisen.assert"), arisen::table("manifests") ]] stored_manifest {
    uint64_t                     unique_id = 0;
    checksum256                  id;
    name                         account;
@@ -41,9 +41,9 @@ struct [[ eosio::contract("eosio.assert"), eosio::table("manifests") ]] stored_m
    checksum256 id_key() const { return id; }
 };
 
-using manifests = eosio::multi_index<
+using manifests = arisen::multi_index<
     "manifests"_n, stored_manifest,
-    indexed_by<"id"_n, eosio::const_mem_fun<stored_manifest, checksum256, &stored_manifest::id_key>>>;
+    indexed_by<"id"_n, arisen::const_mem_fun<stored_manifest, checksum256, &stored_manifest::id_key>>>;
 using manifests_id_index = decltype(std::declval<manifests>().get_index<"id"_n>());
 
 struct abi_hash {
@@ -53,6 +53,6 @@ struct abi_hash {
    uint64_t primary_key() const { return owner.value; }
 };
 
-using abi_hash_table = eosio::multi_index<"abihash"_n, abi_hash>;
+using abi_hash_table = arisen::multi_index<"abihash"_n, abi_hash>;
 
 } // namespace assert_contract

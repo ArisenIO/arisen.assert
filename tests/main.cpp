@@ -1,8 +1,8 @@
-#include <eosio/chain/contract_table_objects.hpp>
-#include <eosio/chain/exceptions.hpp>
-#include <eosio/chain/global_property_object.hpp>
-#include <eosio/chain/resource_limits.hpp>
-#include <eosio/chain/wast_to_wasm.hpp>
+#include <arisen/chain/contract_table_objects.hpp>
+#include <arisen/chain/exceptions.hpp>
+#include <arisen/chain/global_property_object.hpp>
+#include <arisen/chain/resource_limits.hpp>
+#include <arisen/chain/wast_to_wasm.hpp>
 #include <fc/log/logger.hpp>
 
 #include <Runtime/Runtime.h>
@@ -12,7 +12,7 @@
 #include <cstdlib>
 #include <iostream>
 
-#include "eosio.system_tester.hpp"
+#include "arisen.system_tester.hpp"
 
 bool write_mode = false;
 

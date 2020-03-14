@@ -3,7 +3,7 @@ add.manifest: missing authority
 =========================
 push_transaction {
   "actions": [{
-      "account": "eosio.assert",
+      "account": "arisen.assert",
       "name": "add.manifest",
       "authorization": [{
           "actor": "dapp2",
@@ -25,7 +25,7 @@ add.manifest
 =========================
 push_transaction {
   "actions": [{
-      "account": "eosio.assert",
+      "account": "arisen.assert",
       "name": "add.manifest",
       "authorization": [{
           "actor": "dapp1",
@@ -42,7 +42,7 @@ push_transaction {
   ]
 }
 transaction pushed
-table: eosio.assert eosio.assert chain.params
+table: arisen.assert arisen.assert chain.params
     add row:
         {
           "chain_id": "0000000000000000000000000000000000000000000000000000000000000000",
@@ -51,7 +51,7 @@ table: eosio.assert eosio.assert chain.params
           "hash": "0000000000000000000000000000000000000000000000000000000000000000",
           "next_unique_id": 2
         }
-table: eosio.assert eosio.assert manifests
+table: arisen.assert arisen.assert manifests
     add row:
         {
           "unique_id": 1,
@@ -66,7 +66,7 @@ add.manifest: duplicate
 =========================
 push_transaction {
   "actions": [{
-      "account": "eosio.assert",
+      "account": "arisen.assert",
       "name": "add.manifest",
       "authorization": [{
           "actor": "dapp1",
@@ -88,7 +88,7 @@ add.manifest: whitelist
 =========================
 push_transaction {
   "actions": [{
-      "account": "eosio.assert",
+      "account": "arisen.assert",
       "name": "add.manifest",
       "authorization": [{
           "actor": "dapp1",
@@ -115,7 +115,7 @@ push_transaction {
   ]
 }
 transaction pushed
-table: eosio.assert eosio.assert chain.params
+table: arisen.assert arisen.assert chain.params
     change row:
         {
           "chain_id": "0000000000000000000000000000000000000000000000000000000000000000",
@@ -124,7 +124,7 @@ table: eosio.assert eosio.assert chain.params
           "hash": "0000000000000000000000000000000000000000000000000000000000000000",
           "next_unique_id": 3
         }
-table: eosio.assert eosio.assert manifests
+table: arisen.assert arisen.assert manifests
     add row:
         {
           "unique_id": 2,
@@ -149,7 +149,7 @@ del.manifest: not found
 =========================
 push_transaction {
   "actions": [{
-      "account": "eosio.assert",
+      "account": "arisen.assert",
       "name": "del.manifest",
       "authorization": [{
           "actor": "dapp2",
@@ -163,14 +163,14 @@ push_transaction {
   ]
 }
 Exception: assertion failure with message: manifest not found
-table: eosio.assert eosio.assert chain.params
-table: eosio.assert eosio.assert manifests
+table: arisen.assert arisen.assert chain.params
+table: arisen.assert arisen.assert manifests
 
 del.manifest: wrong auth
 =========================
 push_transaction {
   "actions": [{
-      "account": "eosio.assert",
+      "account": "arisen.assert",
       "name": "del.manifest",
       "authorization": [{
           "actor": "dapp2",
@@ -184,14 +184,14 @@ push_transaction {
   ]
 }
 Exception: missing authority of dapp1
-table: eosio.assert eosio.assert chain.params
-table: eosio.assert eosio.assert manifests
+table: arisen.assert arisen.assert chain.params
+table: arisen.assert arisen.assert manifests
 
 del.manifest
 =========================
 push_transaction {
   "actions": [{
-      "account": "eosio.assert",
+      "account": "arisen.assert",
       "name": "del.manifest",
       "authorization": [{
           "actor": "dapp1",
@@ -205,8 +205,8 @@ push_transaction {
   ]
 }
 transaction pushed
-table: eosio.assert eosio.assert chain.params
-table: eosio.assert eosio.assert manifests
+table: arisen.assert arisen.assert chain.params
+table: arisen.assert arisen.assert manifests
     del row:
         {
           "unique_id": 2,
@@ -231,7 +231,7 @@ del.manifest
 =========================
 push_transaction {
   "actions": [{
-      "account": "eosio.assert",
+      "account": "arisen.assert",
       "name": "del.manifest",
       "authorization": [{
           "actor": "dapp1",
@@ -245,8 +245,8 @@ push_transaction {
   ]
 }
 transaction pushed
-table: eosio.assert eosio.assert chain.params
-table: eosio.assert eosio.assert manifests
+table: arisen.assert arisen.assert chain.params
+table: arisen.assert arisen.assert manifests
     del row:
         {
           "unique_id": 1,

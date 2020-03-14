@@ -1,25 +1,25 @@
 cmake_minimum_required(VERSION 3.5)
-project(eosio.assert VERSION 0.0.0)
+project(arisen.assert VERSION 0.0.0)
 
-set(EOSIO_CDT_VERSION_MIN "1.6")
-set(EOSIO_CDT_VERSION_SOFT_MAX "1.6")
-#set(EOSIO_CDT_VERSION_HARD_MAX "")
+set(ARISEN_CDT_VERSION_MIN "1.6")
+set(ARISEN_CDT_VERSION_SOFT_MAX "1.6")
+#set(ARISEN_CDT_VERSION_HARD_MAX "")
 
-find_package(eosio.cdt)
+find_package(arisen.cdt)
 
-### Check the version of eosio.cdt
+### Check the version of arisen.cdt
 set(VERSION_MATCH_ERROR_MSG "")
-EOSIO_CHECK_VERSION(VERSION_OUTPUT "${EOSIO_CDT_VERSION}"
-                                   "${EOSIO_CDT_VERSION_MIN}"
-                                   "${EOSIO_CDT_VERSION_SOFT_MAX}"
-                                   "${EOSIO_CDT_VERSION_HARD_MAX}"
+ARISEN_CHECK_VERSION(VERSION_OUTPUT "${ARISEN_CDT_VERSION}"
+                                   "${ARISEN_CDT_VERSION_MIN}"
+                                   "${ARISEN_CDT_VERSION_SOFT_MAX}"
+                                   "${ARISEN_CDT_VERSION_HARD_MAX}"
                                    VERSION_MATCH_ERROR_MSG)
 if(VERSION_OUTPUT STREQUAL "MATCH")
-   message(STATUS "Using eosio.cdt version ${EOSIO_CDT_VERSION}")
+   message(STATUS "Using arisen.cdt version ${ARISEN_CDT_VERSION}")
 elseif(VERSION_OUTPUT STREQUAL "WARN")
-   message(WARNING "Using eosio.cdt version ${EOSIO_CDT_VERSION} even though it exceeds the maximum supported version of ${EOSIO_CDT_VERSION_SOFT_MAX}; continuing with configuration, however build may fail.\nIt is recommended to use eosio.cdt version ${EOSIO_CDT_VERSION_SOFT_MAX}.x")
+   message(WARNING "Using arisen.cdt version ${ARISEN_CDT_VERSION} even though it exceeds the maximum supported version of ${ARISEN_CDT_VERSION_SOFT_MAX}; continuing with configuration, however build may fail.\nIt is recommended to use arisen.cdt version ${ARISEN_CDT_VERSION_SOFT_MAX}.x")
 else() # INVALID OR MISMATCH
-   message(FATAL_ERROR "Found eosio.cdt version ${EOSIO_CDT_VERSION} but it does not satisfy version requirements: ${VERSION_MATCH_ERROR_MSG}\nPlease use eosio.cdt version ${EOSIO_CDT_VERSION_SOFT_MAX}.x")
+   message(FATAL_ERROR "Found arisen.cdt version ${ARISEN_CDT_VERSION} but it does not satisfy version requirements: ${VERSION_MATCH_ERROR_MSG}\nPlease use arisen.cdt version ${ARISEN_CDT_VERSION_SOFT_MAX}.x")
 endif(VERSION_OUTPUT STREQUAL "MATCH")
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
@@ -29,7 +29,7 @@ else()
    set(TEST_BUILD_TYPE ${CMAKE_BUILD_TYPE})
 endif()
 
-add_subdirectory(eosio.assert)
+add_subdirectory(arisen.assert)
 
 if (APPLE)
    set(OPENSSL_ROOT "/usr/local/opt/openssl")

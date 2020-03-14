@@ -1,8 +1,8 @@
-#include <eosio.assert/eosio.assert.hpp>
+#include <arisen.assert/arisen.assert.hpp>
 
-#include <eosio/contract.hpp>
-#include <eosio/dispatcher.hpp>
-#include <eosio/ignore.hpp>
+#include <arisen/contract.hpp>
+#include <arisen/dispatcher.hpp>
+#include <arisen/ignore.hpp>
 
 namespace assert_contract {
 
@@ -14,7 +14,7 @@ bytes get_action_bytes() {
    return result;
 }
 
-struct[[eosio::contract("eosio.assert")]] asserter : eosio::contract {
+struct[[arisen::contract("arisen.assert")]] asserter : arisen::contract {
    using contract::contract;
 
    manifests           manifest_table{_self, _self.value};
@@ -22,9 +22,9 @@ struct[[eosio::contract("eosio.assert")]] asserter : eosio::contract {
    chains              chain_table{_self, _self.value};
    stored_chain_params chain = chain_table.get_or_default();
 
-   [[eosio::action]] void setchain(ignore<checksum256> chain_id, ignore<string> chain_name, ignore<checksum256> icon) {
-      require_auth("eosio"_n);
-      auto hash = eosio::sha256(_ds.pos(), _ds.remaining());
+   [[arisen::action]] void setchain(ignore<checksum256> chain_id, ignore<string> chain_name, ignore<checksum256> icon) {
+      require_auth("arisen"_n);
+      auto hash = arisen::sha256(_ds.pos(), _ds.remaining());
       _ds >> chain.chain_id;
       _ds >> chain.chain_name;
       _ds >> chain.icon;
@@ -32,10 +32,10 @@ struct[[eosio::contract("eosio.assert")]] asserter : eosio::contract {
       chain_table.set(chain, _self);
    };
 
-   [[eosio::action("add.manifest")]] void add_manifest(
+   [[arisen::action("add.manifest")]] void add_manifest(
        ignore<name> account, ignore<std::string> domain, ignore<std::string> appmeta,
        ignore<vector<contract_action>> whitelist) {
-      auto hash   = eosio::sha256(_ds.pos(), _ds.remaining());
+      auto hash   = arisen::sha256(_ds.pos(), _ds.remaining());
       auto stored = stored_manifest{
           .unique_id = chain.next_unique_id++,
           .id        = hash,
@@ -52,7 +52,7 @@ struct[[eosio::contract("eosio.assert")]] asserter : eosio::contract {
       chain_table.set(chain, _self);
    };
 
-   [[eosio::action("del.manifest")]] void del_manifest(checksum256 id) {
+   [[arisen::action("del.manifest")]] void del_manifest(checksum256 id) {
       auto it = manifest_id_idx.find(id);
       check(it != manifest_id_idx.end(), "manifest not found");
       require_auth(it->account);
@@ -77,7 +77,7 @@ struct[[eosio::contract("eosio.assert")]] asserter : eosio::contract {
       return result;
    }
 
-   [[eosio::action()]] void require(
+   [[arisen::action()]] void require(
        const checksum256& chain_params_hash, const checksum256& manifest_id, const vector<contract_action>& actions,
        const vector<checksum256>& abi_hashes) {
       if (!(chain_params_hash == chain.hash))
@@ -97,7 +97,7 @@ struct[[eosio::contract("eosio.assert")]] asserter : eosio::contract {
                 false,
                 (action.action.to_string() + "@" + action.contract.to_string() + " is not in whitelist").c_str());
       }
-      abi_hash_table table{"eosio"_n, "eosio"_n.value};
+      abi_hash_table table{"arisen"_n, "arisen"_n.value};
       check(abi_hashes.size() == contracts.size(), "incorrect number of abi hashes");
       for (size_t i = 0; i < abi_hashes.size(); ++i) {
          auto        it = table.find(contracts[i].value);

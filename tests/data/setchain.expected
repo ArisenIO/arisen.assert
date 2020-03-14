@@ -3,7 +3,7 @@ setchain: missing authority
 =========================
 push_transaction {
   "actions": [{
-      "account": "eosio.assert",
+      "account": "arisen.assert",
       "name": "setchain",
       "authorization": [{
           "actor": "someone",
@@ -18,17 +18,17 @@ push_transaction {
     }
   ]
 }
-Exception: missing authority of eosio
-table: eosio.assert eosio.assert chain.params
+Exception: missing authority of arisen
+table: arisen.assert arisen.assert chain.params
 
 setchain
 =========================
 push_transaction {
   "actions": [{
-      "account": "eosio.assert",
+      "account": "arisen.assert",
       "name": "setchain",
       "authorization": [{
-          "actor": "eosio",
+          "actor": "arisen",
           "permission": "active"
         }
       ],
@@ -41,7 +41,7 @@ push_transaction {
   ]
 }
 transaction pushed
-table: eosio.assert eosio.assert chain.params
+table: arisen.assert arisen.assert chain.params
     add row:
         {
           "chain_id": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
@@ -55,10 +55,10 @@ setchain: update
 =========================
 push_transaction {
   "actions": [{
-      "account": "eosio.assert",
+      "account": "arisen.assert",
       "name": "setchain",
       "authorization": [{
-          "actor": "eosio",
+          "actor": "arisen",
           "permission": "active"
         }
       ],
@@ -71,7 +71,7 @@ push_transaction {
   ]
 }
 transaction pushed
-table: eosio.assert eosio.assert chain.params
+table: arisen.assert arisen.assert chain.params
     change row:
         {
           "chain_id": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",

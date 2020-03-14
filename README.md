@@ -1,20 +1,20 @@
-# EOSIO Assert Contract
+# ARISEN Assert Contract
 
-The EOSIO Assert Contract is a security feature to reduce the need for users to trust blockchain apps when a user signs a transaction for a trusted blockchain network with a trusted wallet application. It is a solution aiming to:
+The ARISEN Assert Contract is a security feature to reduce the need for users to trust blockchain apps when a user signs a transaction for a trusted blockchain network with a trusted wallet application. It is a solution aiming to:
 
 - Allow blockchain networks to register the official chain name and chain icon
 - Allow app developers to register one or more manifests describing their application, and 
 - Allow app developers to remove previously registered manifests
 - Allow users (via some user-agent) to include a “require” action in a transaction that will ensure that the entire transaction is rejected if the required pre-conditions are not valid.
 
-![EOSIO Labs](https://img.shields.io/badge/EOSIO-Labs-5cb3ff.svg)
+![ARISEN Labs](https://img.shields.io/badge/ARISEN-Labs-5cb3ff.svg)
 
-# About EOSIO Labs
+# About ARISEN Labs
 
-EOSIO Labs repositories are experimental.  Developers in the community are encouraged to use EOSIO Labs repositories as the basis for code and concepts to incorporate into their applications. Community members are also welcome to contribute and further develop these repositories. Since these repositories are not supported by Block.one, we may not provide responses to issue reports, pull requests, updates to functionality, or other requests from the community, and we encourage the community to take responsibility for these.
+ARISEN Labs repositories are experimental.  Developers in the community are encouraged to use ARISEN Labs repositories as the basis for code and concepts to incorporate into their applications. Community members are also welcome to contribute and further develop these repositories. Since these repositories are not supported by Block.one, we may not provide responses to issue reports, pull requests, updates to functionality, or other requests from the community, and we encourage the community to take responsibility for these.
 
 #  Feature Overview
-Assert will be a system contract within the EOSIO software.
+Assert will be a system contract within the ARISEN software.
 
 ## Actors
 ### End-User
@@ -34,38 +34,38 @@ The Trusted Blockchain Network is where smart contract code representing the exe
 ## Flows
 The sequence diagrams in this section describe how and in what order different actors work together when performing actions regarding the Assert Contract.
 
-### eosio.assert::set.chain
+### arisen.assert::set.chain
 
 <img src=".images/setchain.png" alt="Set Chain" width="1400">
 
 Block Producers set chain info for Trusted Blockchain Network
 
-### eosio.assert::add.manifest
+### arisen.assert::add.manifest
 
 
 <img src=".images/addmanifest.png" alt="Add Manifest" width="1400">
 
 Blockchain App publishes manifest to the chain
 
-### eosio.assert::del.manifest
+### arisen.assert::del.manifest
 
 
 <img src=".images/delmanifest.png" alt="Del Manifest" width="1400">
 Blockchain App removes a manifest from the chain
 
-### eosio.assert::require
+### arisen.assert::require
 
 
 <img src=".images/require.png" alt="require" width="1400">
 
 - End User perform an interaction on the Blockchain App that requires signing
-- Blockchain App builds eosio.assert::require action, which includes the following:
+- Blockchain App builds arisen.assert::require action, which includes the following:
   - Chain Info Hash
   - Manifest Hash
   - Array of ABI Hashes
   - Array of Contract Actions
 - Blockchain App proposes the transaction to the Trusted Wallet App, which includes:
-  - eosio.assert::require Action
+  - arisen.assert::require Action
   - Other actions pertaining to the user’s performed interaction
   - Declared domain
   - Chain Info
@@ -77,7 +77,7 @@ Blockchain App removes a manifest from the chain
   - Hash must match app metadata url hash in manifest
   - Chain icon must match hash in metadata
   - App icon must match hash in metadata
-- Trusted Wallet App builds eosio.assert::require based on app manifest, app metadata, declared domain, chain info, and ABIs from the Blockchain App, and compares to the eosio.assert::require that is included in the transaction.
+- Trusted Wallet App builds arisen.assert::require based on app manifest, app metadata, declared domain, chain info, and ABIs from the Blockchain App, and compares to the arisen.assert::require that is included in the transaction.
 - Trusted Wallet App renders and show the Ricardian contract to End User:
   - Render the header from App Metadata, and
   - Render each action from action params, template from ABIs
@@ -92,15 +92,15 @@ Blockchain App removes a manifest from the chain
   - Actions in Whitelist
 
 # Functional Specifications
-Each function of the EOSIO Assert Contract will be explained in detail in this section, including the actor, requirement, parameters and results.
-## eosio.assert::setchain
-Allows Block Producers to set chain metadata, so that a Trusted Wallet Application can display chain information to an End User, and ensure that the validity of the information will be validated by the Trusted Blockchain Network by enforcing the inclusion of a valid eosio.assert::require action in every transaction for which it signs a transaction with the private keys of an End User.
+Each function of the ARISEN Assert Contract will be explained in detail in this section, including the actor, requirement, parameters and results.
+## arisen.assert::setchain
+Allows Block Producers to set chain metadata, so that a Trusted Wallet Application can display chain information to an End User, and ensure that the validity of the information will be validated by the Trusted Blockchain Network by enforcing the inclusion of a valid arisen.assert::require action in every transaction for which it signs a transaction with the private keys of an End User.
 
 | Item | Description |
 | --- | --- |
-| Contract name |  eosio.assert |
+| Contract name |  arisen.assert |
 | Action name |  setchain |
-| Pre-conditions | Requires eosio authorization |
+| Pre-conditions | Requires arisen authorization |
 
 #### Parameters
 - chain_id checksum256 type
@@ -109,30 +109,30 @@ Allows Block Producers to set chain metadata, so that a Trusted Wallet Applicati
 #### Result 
 - Initializes the global state which describes the chain and is required for the contract to work 
 
-## eosio.assert::add.manifest
+## arisen.assert::add.manifest
 Allows a Blockchain Application to publish an app manifest to the Trusted Blockchain Network. The manifest allows a Trusted Wallet Application to ensure that: 1) the metadata claimed by a Blockchain Application matches that of a manifest previously registered by the Blockchain Application, 2) the actions included in a transaction proposed by a Blockchain Application are whitelisted in a manifest previously registered by the Blockchain Application.
 
 | Item | Description |
 | --- | --- |
-| Contract name | eosio.assert |
+| Contract name | arisen.assert |
 | Action name | add.manifest |
 | Pre-conditions | Action must be authorized by the account which owns the app. The added manifest doesn’t already exist. | 
 
 #### Parameters
 - account: the account which owns the app
-- domain: the domain the app is hosted on, appmeta: see the manifest spec at [https://github.com/EOSIO/manifest-spec](https://github.com/EOSIO/manifest-spec)
+- domain: the domain the app is hosted on, appmeta: see the manifest spec at [https://github.com/ARISENIO/manifest-spec](https://github.com/ARISENIO/manifest-spec)
 - whitelist: array of (contract, action) pairs that the manifest allows. An empty contract or action indicates a wildcard match. e.g. an empty action name means all actions are allowed for that contract.
 
 #### Result
 - The manifest is stored. 
 - Checksum256 hash of the manifest data is generated and used as the manifest id. 
 
-## eosio.assert::del.manifest
+## arisen.assert::del.manifest
 Allows a Blockchain Application to remove a previously published app manifest from the Trusted Blockchain Network.
 
 | Item | Description |
 | --- | --- |
-| Contract name | eosio.assert |
+| Contract name | arisen.assert |
 | Action name | del.manifest |
 | Pre-conditions | Action must be authorized by the account which owns the app. The manifest to be deleted exists.|
 #### Parameters
@@ -140,12 +140,12 @@ Allows a Blockchain Application to remove a previously published app manifest fr
 #### Result
 - The manifest is deleted 
 
-## eosio.assert::require
+## arisen.assert::require
 When added to a transaction, ‘require’ action performs multiple security checks. If any of the checks fails, the transactions fails.
 
 | Item | Description |
 | --- | --- |
-| Contract name | eosio.assert |
+| Contract name | arisen.assert |
 | Action name | require |
 | Pre-conditions | |
 #### Parameters
@@ -175,6 +175,6 @@ When added to a transaction, ‘require’ action performs multiple security che
 
 ## Important
 
-See LICENSE for copyright and license terms.  Block.one makes its contribution on a voluntary basis as a member of the EOSIO community and is not responsible for ensuring the overall performance of the software or any related applications.  We make no representation, warranty, guarantee or undertaking in respect of the software or any related documentation, whether expressed or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose and noninfringement. In no event shall we be liable for any claim, damages or other liability, whether in an action of contract, tort or otherwise, arising from, out of or in connection with the software or documentation or the use or other dealings in the software or documentation. Any test results or performance figures are indicative and will not reflect performance under all conditions.  Any reference to any third party or third-party product, service or other resource is not an endorsement or recommendation by Block.one.  We are not responsible, and disclaim any and all responsibility and liability, for your use of or reliance on any of these resources. Third-party resources may be updated, changed or terminated at any time, so the information here may be out of date or inaccurate.  Any person using or offering this software in connection with providing software, goods or services to third parties shall advise such third parties of these license terms, disclaimers and exclusions of liability.  Block.one, EOSIO, EOSIO Labs, EOS, the heptahedron and associated logos are trademarks of Block.one.
+See LICENSE for copyright and license terms.  Block.one makes its contribution on a voluntary basis as a member of the ARISEN community and is not responsible for ensuring the overall performance of the software or any related applications.  We make no representation, warranty, guarantee or undertaking in respect of the software or any related documentation, whether expressed or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose and noninfringement. In no event shall we be liable for any claim, damages or other liability, whether in an action of contract, tort or otherwise, arising from, out of or in connection with the software or documentation or the use or other dealings in the software or documentation. Any test results or performance figures are indicative and will not reflect performance under all conditions.  Any reference to any third party or third-party product, service or other resource is not an endorsement or recommendation by Block.one.  We are not responsible, and disclaim any and all responsibility and liability, for your use of or reliance on any of these resources. Third-party resources may be updated, changed or terminated at any time, so the information here may be out of date or inaccurate.  Any person using or offering this software in connection with providing software, goods or services to third parties shall advise such third parties of these license terms, disclaimers and exclusions of liability.  Block.one, ARISEN, ARISEN Labs, RSN, the heptahedron and associated logos are trademarks of Block.one.
 
 Wallets and related components are complex software that require the highest levels of security.  If incorrectly built or used, they may compromise users’ private keys and digital assets. Wallet applications and related components should undergo thorough security evaluations before being used.  Only experienced developers should work with this software.

@@ -1,10 +1,10 @@
 #include "contracts.hpp"
-#include "eosio.system_tester.hpp"
+#include "arisen.system_tester.hpp"
 
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/test/unit_test.hpp>
-#include <eosio/chain/abi_serializer.hpp>
-#include <eosio/testing/tester.hpp>
+#include <arisen/chain/abi_serializer.hpp>
+#include <arisen/testing/tester.hpp>
 
 #include <Runtime/Runtime.h>
 
@@ -17,9 +17,9 @@
 #define TESTER validating_tester
 #endif
 
-using namespace eosio;
-using namespace eosio::chain;
-using namespace eosio::testing;
+using namespace arisen;
+using namespace arisen::chain;
+using namespace arisen::testing;
 using namespace fc;
 
 inline constexpr auto operator""_n(const char* s, std::size_t) { return string_to_name(s); }
@@ -27,8 +27,8 @@ inline constexpr auto operator""_n(const char* s, std::size_t) { return string_t
 #define CHECK_ASSERT(S, M)                                                                                             \
    try {                                                                                                               \
       S;                                                                                                               \
-      BOOST_ERROR("exception eosio_assert_message_exception is expected");                                             \
-   } catch (eosio_assert_message_exception & e) {                                                                      \
+      BOOST_ERROR("exception arisen_assert_message_exception is expected");                                             \
+   } catch (arisen_assert_message_exception & e) {                                                                      \
       if (e.top_message() != "assertion failure with message: " M)                                                     \
          BOOST_ERROR("expected \"assertion failure with message: " M "\" got \"" + e.top_message() + "\"");            \
    }
@@ -65,16 +65,16 @@ class assert_tester : public TESTER {
    }
 
    assert_tester(const std::string& test_name)
-       : TESTER(), test_name{test_name}, outfile{ASSERT_DATA_DIR + test_name + ".actual"}, abi{contracts::eosio_assert_abi()},
+       : TESTER(), test_name{test_name}, outfile{ASSERT_DATA_DIR + test_name + ".actual"}, abi{contracts::arisen_assert_abi()},
          abi_ser(json::from_string(std::string{abi.data(), abi.data() + abi.size()}).as<abi_def>(),
                  abi_serializer_max_time) {
 
-      set_code("eosio"_n, contracts::test_bios_wasm());
-      set_abi("eosio"_n, contracts::test_bios_abi().data());
+      set_code("arisen"_n, contracts::test_bios_wasm());
+      set_abi("arisen"_n, contracts::test_bios_abi().data());
 
-      create_account("eosio.assert"_n);
-      set_code("eosio.assert"_n, contracts::eosio_assert_wasm());
-      set_abi("eosio.assert"_n, contracts::eosio_assert_abi().data());
+      create_account("arisen.assert"_n);
+      set_code("arisen.assert"_n, contracts::arisen_assert_wasm());
+      set_abi("arisen.assert"_n, contracts::arisen_assert_abi().data());
    }
 
    struct row {
@@ -158,14 +158,14 @@ BOOST_AUTO_TEST_SUITE(assert)
 
 BOOST_AUTO_TEST_CASE(setchain) try {
    assert_tester        t{"setchain"};
-   assert_tester::table manifests{"eosio.assert"_n, "eosio.assert"_n, "manifests"_n, "stored_manifest"};
-   assert_tester::table chain_params{"eosio.assert"_n, "eosio.assert"_n, "chain.params"_n, "stored_chain_params"};
+   assert_tester::table manifests{"arisen.assert"_n, "arisen.assert"_n, "manifests"_n, "stored_manifest"};
+   assert_tester::table chain_params{"arisen.assert"_n, "arisen.assert"_n, "chain.params"_n, "stored_chain_params"};
    t.create_account("someone"_n);
 
    t.heading("setchain: missing authority");
    t.push_transaction("someone"_n, R"({
       "actions": [{
-         "account":              "eosio.assert",
+         "account":              "arisen.assert",
          "name":                 "setchain",
          "authorization": [{
             "actor":             "someone",
@@ -181,12 +181,12 @@ BOOST_AUTO_TEST_CASE(setchain) try {
    t.diff_table(chain_params);
 
    t.heading("setchain");
-   t.push_transaction("eosio"_n, R"({
+   t.push_transaction("arisen"_n, R"({
       "actions": [{
-         "account":              "eosio.assert",
+         "account":              "arisen.assert",
          "name":                 "setchain",
          "authorization": [{
-            "actor":             "eosio",
+            "actor":             "arisen",
             "permission":        "active",
          }],
          "data": {
@@ -199,12 +199,12 @@ BOOST_AUTO_TEST_CASE(setchain) try {
    t.diff_table(chain_params);
 
    t.heading("setchain: update");
-   t.push_transaction("eosio"_n, R"({
+   t.push_transaction("arisen"_n, R"({
       "actions": [{
-         "account":              "eosio.assert",
+         "account":              "arisen.assert",
          "name":                 "setchain",
          "authorization": [{
-            "actor":             "eosio",
+            "actor":             "arisen",
             "permission":        "active",
          }],
          "data": {
@@ -222,15 +222,15 @@ FC_LOG_AND_RETHROW() // setchain
 
 BOOST_AUTO_TEST_CASE(add_manifest) try {
    assert_tester        t{"add_manifest"};
-   assert_tester::table manifests{"eosio.assert"_n, "eosio.assert"_n, "manifests"_n, "stored_manifest"};
-   assert_tester::table chain_params{"eosio.assert"_n, "eosio.assert"_n, "chain.params"_n, "stored_chain_params"};
+   assert_tester::table manifests{"arisen.assert"_n, "arisen.assert"_n, "manifests"_n, "stored_manifest"};
+   assert_tester::table chain_params{"arisen.assert"_n, "arisen.assert"_n, "chain.params"_n, "stored_chain_params"};
    t.create_account("dapp1"_n);
    t.create_account("dapp2"_n);
 
    t.heading("add.manifest: missing authority");
    t.push_transaction("dapp2"_n, R"({
       "actions": [{
-         "account":              "eosio.assert",
+         "account":              "arisen.assert",
          "name":                 "add.manifest",
          "authorization": [{
             "actor":             "dapp2",
@@ -248,7 +248,7 @@ BOOST_AUTO_TEST_CASE(add_manifest) try {
    t.heading("add.manifest");
    t.push_transaction("dapp1"_n, R"({
       "actions": [{
-         "account":              "eosio.assert",
+         "account":              "arisen.assert",
          "name":                 "add.manifest",
          "authorization": [{
             "actor":             "dapp1",
@@ -269,7 +269,7 @@ BOOST_AUTO_TEST_CASE(add_manifest) try {
    t.produce_block();
    t.push_transaction("dapp1"_n, R"({
       "actions": [{
-         "account":              "eosio.assert",
+         "account":              "arisen.assert",
          "name":                 "add.manifest",
          "authorization": [{
             "actor":             "dapp1",
@@ -288,7 +288,7 @@ BOOST_AUTO_TEST_CASE(add_manifest) try {
    t.produce_block();
    t.push_transaction("dapp1"_n, R"({
       "actions": [{
-         "account":              "eosio.assert",
+         "account":              "arisen.assert",
          "name":                 "add.manifest",
          "authorization": [{
             "actor":             "dapp1",
@@ -317,7 +317,7 @@ BOOST_AUTO_TEST_CASE(add_manifest) try {
    t.heading("del.manifest: not found");
    t.push_transaction("dapp2"_n, R"({
       "actions": [{
-         "account":              "eosio.assert",
+         "account":              "arisen.assert",
          "name":                 "del.manifest",
          "authorization": [{
             "actor":             "dapp2",
@@ -334,7 +334,7 @@ BOOST_AUTO_TEST_CASE(add_manifest) try {
    t.heading("del.manifest: wrong auth");
    t.push_transaction("dapp2"_n, R"({
       "actions": [{
-         "account":              "eosio.assert",
+         "account":              "arisen.assert",
          "name":                 "del.manifest",
          "authorization": [{
             "actor":             "dapp2",
@@ -351,7 +351,7 @@ BOOST_AUTO_TEST_CASE(add_manifest) try {
    t.heading("del.manifest");
    t.push_transaction("dapp1"_n, R"({
       "actions": [{
-         "account":              "eosio.assert",
+         "account":              "arisen.assert",
          "name":                 "del.manifest",
          "authorization": [{
             "actor":             "dapp1",
@@ -368,7 +368,7 @@ BOOST_AUTO_TEST_CASE(add_manifest) try {
    t.heading("del.manifest");
    t.push_transaction("dapp1"_n, R"({
       "actions": [{
-         "account":              "eosio.assert",
+         "account":              "arisen.assert",
          "name":                 "del.manifest",
          "authorization": [{
             "actor":             "dapp1",
@@ -388,19 +388,19 @@ FC_LOG_AND_RETHROW() // add_manifest
 
 BOOST_AUTO_TEST_CASE(require) try {
    assert_tester        t{"require"};
-   assert_tester::table manifests{"eosio.assert"_n, "eosio.assert"_n, "manifests"_n, "stored_manifest"};
-   assert_tester::table chain_params{"eosio.assert"_n, "eosio.assert"_n, "chain.params"_n, "stored_chain_params"};
+   assert_tester::table manifests{"arisen.assert"_n, "arisen.assert"_n, "manifests"_n, "stored_manifest"};
+   assert_tester::table chain_params{"arisen.assert"_n, "arisen.assert"_n, "chain.params"_n, "stored_chain_params"};
    t.create_account("dapp1"_n);
    t.create_account("wild"_n);
    t.create_account("user"_n);
 
    t.heading("setchain");
-   t.push_transaction("eosio"_n, R"({
+   t.push_transaction("arisen"_n, R"({
       "actions": [{
-         "account":              "eosio.assert",
+         "account":              "arisen.assert",
          "name":                 "setchain",
          "authorization": [{
-            "actor":             "eosio",
+            "actor":             "arisen",
             "permission":        "active",
          }],
          "data": {
@@ -415,7 +415,7 @@ BOOST_AUTO_TEST_CASE(require) try {
    t.heading("add.manifest");
    t.push_transaction("dapp1"_n, R"({
       "actions": [{
-         "account":              "eosio.assert",
+         "account":              "arisen.assert",
          "name":                 "add.manifest",
          "authorization": [{
             "actor":             "dapp1",
@@ -444,7 +444,7 @@ BOOST_AUTO_TEST_CASE(require) try {
    t.heading("add.manifest");
    t.push_transaction("wild"_n, R"({
       "actions": [{
-         "account":              "eosio.assert",
+         "account":              "arisen.assert",
          "name":                 "add.manifest",
          "authorization": [{
             "actor":             "wild",
@@ -467,7 +467,7 @@ BOOST_AUTO_TEST_CASE(require) try {
    t.heading("require: wrong chain");
    t.push_transaction("user"_n, R"({
       "actions": [{
-         "account":              "eosio.assert",
+         "account":              "arisen.assert",
          "name":                 "require",
          "authorization": [{
             "actor":             "user",
@@ -485,7 +485,7 @@ BOOST_AUTO_TEST_CASE(require) try {
    t.heading("require: unknown manifest");
    t.push_transaction("user"_n, R"({
       "actions": [{
-         "account":              "eosio.assert",
+         "account":              "arisen.assert",
          "name":                 "require",
          "authorization": [{
             "actor":             "user",
@@ -503,7 +503,7 @@ BOOST_AUTO_TEST_CASE(require) try {
    t.heading("require");
    t.push_transaction("user"_n, R"({
       "actions": [{
-         "account":              "eosio.assert",
+         "account":              "arisen.assert",
          "name":                 "require",
          "authorization": [{
             "actor":             "user",
@@ -521,7 +521,7 @@ BOOST_AUTO_TEST_CASE(require) try {
    t.heading("require: simple match whitelist");
    t.push_transaction("user"_n, R"({
       "actions": [{
-         "account":              "eosio.assert",
+         "account":              "arisen.assert",
          "name":                 "require",
          "authorization": [{
             "actor":             "user",
@@ -542,7 +542,7 @@ BOOST_AUTO_TEST_CASE(require) try {
    t.heading("require: whitelist wild action");
    t.push_transaction("user"_n, R"({
       "actions": [{
-         "account":              "eosio.assert",
+         "account":              "arisen.assert",
          "name":                 "require",
          "authorization": [{
             "actor":             "user",
@@ -563,7 +563,7 @@ BOOST_AUTO_TEST_CASE(require) try {
    t.heading("require: whitelist wild contract");
    t.push_transaction("user"_n, R"({
       "actions": [{
-         "account":              "eosio.assert",
+         "account":              "arisen.assert",
          "name":                 "require",
          "authorization": [{
             "actor":             "user",
@@ -584,7 +584,7 @@ BOOST_AUTO_TEST_CASE(require) try {
    t.heading("require: whitelist full wild");
    t.push_transaction("user"_n, R"({
       "actions": [{
-         "account":              "eosio.assert",
+         "account":              "arisen.assert",
          "name":                 "require",
          "authorization": [{
             "actor":             "user",
@@ -605,7 +605,7 @@ BOOST_AUTO_TEST_CASE(require) try {
    t.heading("require: whitelist doesn't match");
    t.push_transaction("user"_n, R"({
       "actions": [{
-         "account":              "eosio.assert",
+         "account":              "arisen.assert",
          "name":                 "require",
          "authorization": [{
             "actor":             "user",
@@ -637,16 +637,16 @@ BOOST_AUTO_TEST_CASE(require_abi_hash) try {
    t.set_abi("foo"_n, contracts::test_foo_abi().data());
    t.set_abi("bar"_n, contracts::test_bar_abi().data());
    t.set_abi("baz"_n, contracts::test_baz_abi().data());
-   assert_tester::table manifests{"eosio.assert"_n, "eosio.assert"_n, "manifests"_n, "stored_manifest"};
-   assert_tester::table chain_params{"eosio.assert"_n, "eosio.assert"_n, "chain.params"_n, "stored_chain_params"};
+   assert_tester::table manifests{"arisen.assert"_n, "arisen.assert"_n, "manifests"_n, "stored_manifest"};
+   assert_tester::table chain_params{"arisen.assert"_n, "arisen.assert"_n, "chain.params"_n, "stored_chain_params"};
 
    t.heading("setchain");
-   t.push_transaction("eosio"_n, R"({
+   t.push_transaction("arisen"_n, R"({
       "actions": [{
-         "account":              "eosio.assert",
+         "account":              "arisen.assert",
          "name":                 "setchain",
          "authorization": [{
-            "actor":             "eosio",
+            "actor":             "arisen",
             "permission":        "active",
          }],
          "data": {
@@ -661,7 +661,7 @@ BOOST_AUTO_TEST_CASE(require_abi_hash) try {
    t.heading("hash: add.manifest");
    t.push_transaction("wild"_n, R"({
       "actions": [{
-         "account":              "eosio.assert",
+         "account":              "arisen.assert",
          "name":                 "add.manifest",
          "authorization": [{
             "actor":             "wild",
@@ -684,7 +684,7 @@ BOOST_AUTO_TEST_CASE(require_abi_hash) try {
    t.heading("hash: unknown");
    t.push_transaction("user"_n, R"({
       "actions": [{
-         "account":              "eosio.assert",
+         "account":              "arisen.assert",
          "name":                 "require",
          "authorization": [{
             "actor":             "user",
@@ -705,7 +705,7 @@ BOOST_AUTO_TEST_CASE(require_abi_hash) try {
    t.heading("hash: 1");
    t.push_transaction("user"_n, R"({
       "actions": [{
-         "account":              "eosio.assert",
+         "account":              "arisen.assert",
          "name":                 "require",
          "authorization": [{
             "actor":             "user",
@@ -726,7 +726,7 @@ BOOST_AUTO_TEST_CASE(require_abi_hash) try {
    t.heading("hash: 3");
    t.push_transaction("user"_n, R"({
       "actions": [{
-         "account":              "eosio.assert",
+         "account":              "arisen.assert",
          "name":                 "require",
          "authorization": [{
             "actor":             "user",
@@ -763,7 +763,7 @@ BOOST_AUTO_TEST_CASE(require_abi_hash) try {
    t.heading("hash: mismatch");
    t.push_transaction("user"_n, R"({
       "actions": [{
-         "account":              "eosio.assert",
+         "account":              "arisen.assert",
          "name":                 "require",
          "authorization": [{
             "actor":             "user",
@@ -800,7 +800,7 @@ BOOST_AUTO_TEST_CASE(require_abi_hash) try {
    t.heading("hash: wrong number of hashes");
    t.push_transaction("user"_n, R"({
       "actions": [{
-         "account":              "eosio.assert",
+         "account":              "arisen.assert",
          "name":                 "require",
          "authorization": [{
             "actor":             "user",
